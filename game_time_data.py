@@ -4,14 +4,28 @@ import statsapi
 
 from pybaseball import statcast
 
-venue_exclusion = ['American Family Field',
-                   'Chase Field',
-                   'Globe Life Field',
-                   'LoanDepot Park',
-                   'Minute Maid Park',
-                   'Rogers Centre',
-                   'T-Mobile Park',
-                   'Tropicana Field']
+venue_inclusion = ['Angel Stadium',
+                   'Busch Stadium',
+                   'Citi Field',
+                   'Citizens Bank Park',
+                   'Comerica Park',
+                   'Coors Field',
+                   'Dodger Stadium',
+                   'Fenway Park',
+                   'Great American Ball Park',
+                   'Guaranteed Rate Field',
+                   'Kauffman Stadium',
+                   'Nationals Park',
+                   'Oakland-Alameda County Coliseum',
+                   'Oracle Park',
+                   'Oriole Park at Camden Yards',
+                   'Petco Park',
+                   'PNC Park',
+                   'Progressive Field',
+                   'Target Field',
+                   'Truist Park',
+                   'Wrigley Field',
+                   'Yankee Stadium']
 
 # 2017 season began on April 2nd
 # 2023 season ended on October 1st
@@ -30,7 +44,7 @@ def main():
     df = pd.concat([data_2017, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023], ignore_index=True)
 
     # Remove games from excluded venues
-    filtered_df = df[~df['venue_name'].isin(venue_exclusion)]
+    filtered_df = df[df['venue_name'].isin(venue_inclusion)]
     
     # Extract game's datetime and venue name
     filtered_df = filtered_df[['game_datetime', 'venue_name']]
