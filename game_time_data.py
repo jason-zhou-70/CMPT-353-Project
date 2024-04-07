@@ -25,7 +25,9 @@ venue_inclusion = ['Angel Stadium',
                    'Target Field',
                    'Truist Park',
                    'Wrigley Field',
-                   'Yankee Stadium']
+                   'Yankee Stadium',
+                   'SunTrust Park',
+                   'AT&T Park']
 
 # 2017 season began on April 2nd
 # 2023 season ended on October 1st
