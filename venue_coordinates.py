@@ -28,7 +28,7 @@ venue_inclusion = ['Angel Stadium',
                    'Guaranteed Rate Field',
                    'Kauffman Stadium',
                    'Nationals Park',
-                   'Oakland-Alameda County Coliseum',
+                   'Oakland Coliseum',
                    'Oracle Park',
                    'Oriole Park at Camden Yards',
                    'Petco Park',
@@ -42,20 +42,21 @@ venue_inclusion = ['Angel Stadium',
                    'AT&T Park']
 
 def main():
-    stadium_coordinates = {}
-
-    for venue in venue_inclusion:
-        coordinates = get_coordinates(venue)
-        if coordinates:
-            stadium_coordinates[venue] = coordinates
-        else:
-            print(f"Coordinates not found for: {venue}")
-
-    print(stadium_coordinates)
+    data = pd.read_csv('game-time-data.csv')
     
+    # Get each of the venue into a single row
+    data = data.groupby('venue_name').first().reset_index().drop(columns = ['date', 'time'])
+    # Get the coordinates for each venue
+    coordinates = data.groupby('venue_name').apply(lambda x: get_coordinates(x['venue_name'].iloc[0]))
     
+    # Geocoder API gets the coordinates for AT&T Park wrong, so we have to manually set them
+    coordinates['AT&T Park'] = (37.7786119, -122.39026745425639)
+    
+    # Split the coordinates into latitude and longitude and put them into the columns in the dataframe
+    data[['latitude', 'longitude']] = data['venue_name'].apply(lambda x: pd.Series(coordinates[x]))
+
     # Save to CSV
-    # filtered_df.to_csv('game-time-data.csv', index = False)
+    data.to_csv('venue-coordinates.csv', index = False)
     
     
 if __name__ == '__main__':
