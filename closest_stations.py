@@ -46,7 +46,9 @@ def main():
     
     venues = pd.read_csv('venue-coordinates.csv')
     venues['closest_station_id'] = venues.apply(lambda x: find_closest_station(x, stations), axis = 1)
-    print(venues)
+
+    # Save to CSV
+    venues.to_csv('closest_station.csv', index = False)
     
     
 if __name__ == '__main__':
