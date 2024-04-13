@@ -1,9 +1,6 @@
 import numpy as np
 import pandas as pd
-
-from pybaseball import statcast
-from pybaseball import statcast_pitcher
-from pybaseball import playerid_lookup
+from scipy import stats
 
 venue_to_abbreviation = {
     'Angel Stadium': 'ANA',
@@ -36,15 +33,35 @@ venue_to_abbreviation = {
 def main():
     pitch_data = pd.read_csv('statcast-data-filtered.csv.gz')
     weather_data = pd.read_csv('game_time_temperatures.csv')
-    weather_data['abbreviation'] = weather_data['venue_name'].map(venue_to_abbreviation)
     
+    # Get the team abbreviation for each venue
+    weather_data['abbreviation'] = weather_data['venue_name'].map(venue_to_abbreviation)
+    # Join with pitch data on date and abbreviation to match with the home_team
     pitch_data_with_tavg = pd.merge(pitch_data, weather_data, left_on=['game_date', 'home_team'], right_on=['date', 'abbreviation'])
 
-    cold_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] <= 10]
-    warm_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] > 10]
+    # Separate pitches into cold and warm days
+    cold_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] <= 10].dropna()
+    warm_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] > 10].dropna()
     
+    # Drop the pitches that don't have a matching pitcher in the cold data
+    filtered_warm_pitch_data = warm_pitch_data[warm_pitch_data['pitcher'].isin(cold_pitch_data['pitcher'])]
+    filtered_cold_pitch_data = cold_pitch_data[cold_pitch_data['pitcher'].isin(warm_pitch_data['pitcher'])]
+
     print(f"Number of cold pitches: {cold_pitch_data.shape[0]}")
     print(f"Number of warm pitches: {warm_pitch_data.shape[0]}")
+    print(f"Number of cold pitches after filtering: {filtered_cold_pitch_data.shape[0]}")
+    print(f"Number of warm pitches after filtering: {filtered_warm_pitch_data.shape[0]}")
+    
+    utest_spin = stats.mannwhitneyu(filtered_cold_pitch_data['release_spin_rate'], filtered_warm_pitch_data['release_spin_rate'])
+    print(f"Mann-Whitney U test on spin rate: {utest_spin}")
+    
+    utest_speed = stats.mannwhitneyu(filtered_cold_pitch_data['release_speed'], filtered_warm_pitch_data['release_speed'])
+    print(f"Mann-Whitney U test on pitch speed: {utest_speed}")
+    
+    ttest_spin = stats.ttest_ind(filtered_cold_pitch_data['release_spin_rate'], filtered_warm_pitch_data['release_spin_rate'])
+    print(f"t-test on spin rate: {ttest_spin}")
+    ttest_speed = stats.ttest_ind(filtered_cold_pitch_data['release_speed'], filtered_warm_pitch_data['release_speed'])
+    print(f"t-test on pitch speed: {ttest_speed}")
 
 if __name__ == '__main__':
     main()
