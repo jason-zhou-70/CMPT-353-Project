@@ -37,10 +37,14 @@ def main():
     pitch_data = pd.read_csv('statcast-data-filtered.csv.gz')
     weather_data = pd.read_csv('game_time_temperatures.csv')
     weather_data['abbreviation'] = weather_data['venue_name'].map(venue_to_abbreviation)
-    print(pitch_data)
     
-    # pitch_data_with_tavg = pd.merge(pitch_data, weather_data, how='left', left_on=['game_date', 'home_team'], right_on=['date', 'abbreviation'])
-    # print(pitch_data_with_tavg)
+    pitch_data_with_tavg = pd.merge(pitch_data, weather_data, left_on=['game_date', 'home_team'], right_on=['date', 'abbreviation'])
+
+    cold_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] <= 10]
+    warm_pitch_data = pitch_data_with_tavg[pitch_data_with_tavg['TAVG'] > 10]
+    
+    print(f"Number of cold pitches: {cold_pitch_data.shape[0]}")
+    print(f"Number of warm pitches: {warm_pitch_data.shape[0]}")
 
 if __name__ == '__main__':
     main()
