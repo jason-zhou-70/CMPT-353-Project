@@ -15,7 +15,7 @@ def main():
     
     # Get the columns that we're interested in from the original data
     data = pd.read_csv('statcast-data.csv.gz')
-    data = data[['pitch_type', 'release_speed', 'pitcher', 'home_team', 'away_team', 'pitch_name', 'release_spin_rate']]
+    data = data[['game_date', 'pitch_type', 'release_speed', 'pitcher', 'home_team', 'away_team', 'pitch_name', 'release_spin_rate']]
     data.to_csv('statcast-data-filtered.csv.gz', index = False, compression = 'gzip')
 
 
