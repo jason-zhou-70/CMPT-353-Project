@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import sys
 import os
 
 # Function to convert Fahrenheit to Celsius
@@ -21,22 +20,33 @@ def process_data(game_time_input, weather_input):
     return merged_data
 
 def main():
-    game_time_input = sys.argv[1]
-    weather_input = sys.argv[2]
-    output = sys.argv[3]
+    seperate_game_time_path = './seperate_game_time/'
+    seperate_weather_path = './weather_data/'
+
+    seperate_game_time = [f for f in os.listdir(seperate_game_time_path) if f.endswith('.csv')]
+    seperate_weather = [f for f in os.listdir(seperate_weather_path) if f.endswith('.csv')]
+
+    seperate_game_time_df = []
+    for file in seperate_game_time:
+        file_path = os.path.join(seperate_game_time_path, file)
+        df = pd.read_csv(file_path)
+        seperate_game_time_df.append(df)
+
+    seperate_weather_df = []
+    for file in seperate_weather:
+        file_path = os.path.join(seperate_weather_path, file)
+        df = pd.read_csv(file_path)
+        seperate_weather_df.append(df)
     
-    # Read in the data
-    game_time = pd.read_csv(game_time_input)
-    # Drop rows with missing TAVG values
-    weather = pd.read_csv(weather_input)
-    
-    merged_data = process_data(game_time, weather)
-    
-    if not os.path.exists('game_time_temperatures'):
-        os.makedirs('game_time_temperatures')
+    joined_data = pd.DataFrame(columns = ['venue_name', 'date', 'time', 'TAVG'])
+    for i in range(1,21):
+        game_time = seperate_game_time_df[i]
+        weather = seperate_weather_df[i]
+        merged_data = process_data(game_time, weather)
+        joined_data = pd.concat([joined_data, merged_data])
     
     # Save to CSV
-    merged_data.to_csv('game_time_temperatures/anaheim.csv', index = False)
+    merged_data.to_csv('game_time_temperatures.csv', index = False)
 
 if __name__ == '__main__':
     main()
