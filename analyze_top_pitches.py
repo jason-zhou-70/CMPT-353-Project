@@ -20,7 +20,7 @@ def main():
         utest_speed = stats.mannwhitneyu(top_pitches_cold['release_speed'], top_pitches_warm['release_speed'])
         utest_df.loc[pitches] = [utest_spin.pvalue, utest_speed.pvalue]
 
-    utest_df.to_csv('utest_results.csv')
+    print(utest_df)
 
 
 if __name__ == '__main__':
