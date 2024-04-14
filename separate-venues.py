@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 # Split the data into separate CSV files for each venue
 def main():
@@ -25,26 +26,29 @@ def main():
     minneapolis = data[data['venue_name'] == 'Target Field']
     atlanta = data[(data['venue_name'] == 'Truist Park') | (data['venue_name'] == 'SunTrust Park')]
     
-    anaheim.to_csv('anaheim-game-time.csv', index = False)
-    st_louis.to_csv('st-louis-game-time.csv', index = False)
-    new_york.to_csv('new-york-game-time.csv', index = False)
-    philadelphia.to_csv('philadelphia-game-time.csv', index = False)
-    detroit.to_csv('detroit-game-time.csv', index = False)
-    denver.to_csv('denver-game-time.csv', index = False)
-    los_angeles.to_csv('los-angeles-game-time.csv', index = False)
-    boston.to_csv('boston-game-time.csv', index = False)
-    cincinnati.to_csv('cincinnati-game-time.csv', index = False)
-    chicago.to_csv('chicago-game-time.csv', index = False)
-    kansas_city.to_csv('kansas-city-game-time.csv', index = False)
-    washington.to_csv('washington-game-time.csv', index = False)
-    oakland.to_csv('oakland-game-time.csv', index = False)
-    san_francisco.to_csv('san-francisco-game-time.csv', index = False)
-    baltimore.to_csv('baltimore-game-time.csv', index = False)
-    san_diego.to_csv('san-diego-game-time.csv', index = False)
-    pittsburgh.to_csv('pittsburgh-game-time.csv', index = False)
-    cleveland.to_csv('cleveland-game-time.csv', index = False)
-    minneapolis.to_csv('minneapolis-game-time.csv', index = False)
-    atlanta.to_csv('atlanta-game-time.csv', index = False)
+    if not os.path.exists('game_time_data'):
+        os.makedirs('game_time_data/')
+    
+    anaheim.to_csv('game_time_data/anaheim-game-time.csv', index=False)
+    st_louis.to_csv('game_time_data/st-louis-game-time.csv', index=False)
+    new_york.to_csv('game_time_data/new-york-game-time.csv', index=False)
+    philadelphia.to_csv('game_time_data/philadelphia-game-time.csv', index=False)
+    detroit.to_csv('game_time_data/detroit-game-time.csv', index=False)
+    denver.to_csv('game_time_data/denver-game-time.csv', index=False)
+    los_angeles.to_csv('game_time_data/los-angeles-game-time.csv', index=False)
+    boston.to_csv('game_time_data/boston-game-time.csv', index=False)
+    cincinnati.to_csv('game_time_data/cincinnati-game-time.csv', index=False)
+    chicago.to_csv('game_time_data/chicago-game-time.csv', index=False)
+    kansas_city.to_csv('game_time_data/kansas-city-game-time.csv', index=False)
+    washington.to_csv('game_time_data/washington-game-time.csv', index=False)
+    oakland.to_csv('game_time_data/oakland-game-time.csv', index=False)
+    san_francisco.to_csv('game_time_data/san-francisco-game-time.csv', index=False)
+    baltimore.to_csv('game_time_data/baltimore-game-time.csv', index=False)
+    san_diego.to_csv('game_time_data/san-diego-game-time.csv', index=False)
+    pittsburgh.to_csv('game_time_data/pittsburgh-game-time.csv', index=False)
+    cleveland.to_csv('game_time_data/cleveland-game-time.csv', index=False)
+    minneapolis.to_csv('game_time_data/minneapolis-game-time.csv', index=False)
+    atlanta.to_csv('game_time_data/atlanta-game-time.csv', index=False)
 
 if __name__ == '__main__':
     main()
